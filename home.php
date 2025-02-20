@@ -6,7 +6,7 @@ ini_set('session.use_strict_mode', 1); // Prevent session fixation
 
 session_start(); // Start the session 
 
-$timeout_duration = 10; // 15 minutes
+$timeout_duration = 900; // 15 minutes
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
