@@ -82,12 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 </head>
 
 
-<body style="background-color: whitesmoke;
- 
- min-height: 100vh;
- display: flex;
- justify-content: center;
- align-items: center;">
+<body >
     <div class="container">
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-xl-4 col-md-6">

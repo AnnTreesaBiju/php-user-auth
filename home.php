@@ -6,7 +6,7 @@ ini_set('session.use_strict_mode', 1); // Prevent session fixation
 
 session_start(); // Start the session 
 
-$timeout_duration = 10; // 15 minutes (900 seconds)
+$timeout_duration = 900; // 15 minutes (900 seconds)
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -64,41 +64,32 @@ $remaining_time = $_SESSION['last_activity'] + $timeout_duration - time();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-
+    <link rel="stylesheet" href="style.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
+<body>
+    <div class="container text-center">
+        <div class="row d-flex justify-content-center">
+            <div class="col-8 col-lg-6">
 
-        .container {
-            max-width: 500px;
-            margin-top: 100px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
+                <h2 class="mb-3 fs-1">Welcome, <?php echo $username; ?>!</h2>
 
-        .logout-btn {
-            background: red;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            text-decoration: none;
-            text-align: center;
-        }
+                <!-- Display session messages -->
+                <?php if (isset($_SESSION['message'])): ?>
+                    <div class="alert alert-warning"><?php echo $_SESSION['message']; ?></div>
+                    <?php unset($_SESSION['message']); ?>
+                <?php endif; ?>
 
-        .logout-btn:hover {
-            background: darkred;
-        }
-    </style>
+                <!-- Logout button -->
+                <a href="?logout" class="logout-btn mt-5">Logout</a>
+            </div>
+        </div>
+    </div>
 
+    <!-- Bootstrap JS (Optional for interactivity) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // **JavaScript auto-logout timer**
         var remainingTime = <?php echo $remaining_time; ?>; // Get time left in PHP
@@ -123,30 +114,6 @@ $remaining_time = $_SESSION['last_activity'] + $timeout_duration - time();
         // Start the logout timer when page loads
         window.onload = startLogoutTimer;
     </script>
-</head>
-
-<body>
-
-    <div class="row d-flex justify-content-center">
-        <div class="col-10 col-lg-12">
-            <div class="container text-center">
-                <h2 class="mb-3">Welcome, <?php echo $username; ?>!</h2>
-
-                <!-- Display session messages -->
-                <?php if (isset($_SESSION['message'])): ?>
-                    <div class="alert alert-warning"><?php echo $_SESSION['message']; ?></div>
-                    <?php unset($_SESSION['message']); ?>
-                <?php endif; ?>
-
-                <!-- Logout button -->
-                <a href="?logout" class="logout-btn d-block">Logout</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS (Optional for interactivity) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
