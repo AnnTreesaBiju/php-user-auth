@@ -17,18 +17,22 @@ if ($conn->connect_error)
 
 $message = "";
 
-// Display session message
+// ✅ Fix: Check if 'message' exists before displaying
 if (isset($_SESSION['message'])) {
-    $message = "<div class='alert " . ($_SESSION['message_type'] == 'success' ? "alert-success" : "alert-danger") . "'>" . $_SESSION['message'] . "</div>";
+    $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : "danger"; // Default to danger
+    $message = "<div class='alert alert-$message_type'>" . $_SESSION['message'] . "</div>";
     unset($_SESSION['message']);
     unset($_SESSION['message_type']);
 }
 
-// Session expiration check
+// ✅ Fix: Store session timeout message before redirecting
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 900)) { // 900 seconds = 15 minutes
     session_unset();
     session_destroy();
-    header("Location: login.php?message=Session Expired");
+    session_start();
+    $_SESSION['message'] = "Session expired. Please log in again.";
+    $_SESSION['message_type'] = "danger";
+    header("Location: login.php");
     exit();
 }
 $_SESSION['last_activity'] = time(); // Reset activity timer
