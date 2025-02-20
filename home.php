@@ -4,7 +4,7 @@ ini_set('session.cookie_httponly', 1); // Prevent JavaScript access to session c
 ini_set('session.cookie_secure', 1); // Enable HTTPS-only cookies (Only if HTTPS is used)
 ini_set('session.use_strict_mode', 1); // Prevent session fixation
 
-session_start(); // Start the session
+session_start(); // Start the session 
 
 $timeout_duration = 10; // 15 minutes
 

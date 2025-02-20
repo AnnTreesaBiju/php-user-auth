@@ -9,7 +9,7 @@ session_start();
 // Database connection
 $host = 'localhost';
 $user = 'root';
-$pass = '';
+$pass = ''; 
 $dbname = 'user_auth';
 $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error)
