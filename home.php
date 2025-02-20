@@ -15,10 +15,12 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Prevent session hijacking (IP & User-Agent Verification)
-if (!isset($_SESSION['user_agent']) || !isset($_SESSION['ip_address']) || 
-    $_SESSION['user_agent'] !== $_SERVER['HTTP_USER_AGENT'] || 
-    $_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR']) {
-    
+if (
+    !isset($_SESSION['user_agent']) || !isset($_SESSION['ip_address']) ||
+    $_SESSION['user_agent'] !== $_SERVER['HTTP_USER_AGENT'] ||
+    $_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR']
+) {
+
     session_unset();
     session_destroy();
     header("Location: login.php?message=Session Hijacked");
@@ -55,11 +57,12 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -67,6 +70,7 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
         body {
             background-color: #f8f9fa;
         }
+
         .container {
             max-width: 500px;
             margin-top: 100px;
@@ -75,6 +79,7 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
+
         .logout-btn {
             background: red;
             color: white;
@@ -86,28 +91,35 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
             text-decoration: none;
             text-align: center;
         }
+
         .logout-btn:hover {
             background: darkred;
         }
     </style>
 </head>
+
 <body>
 
-<div class="container text-center">
-    <h2 class="mb-3">Welcome, <?php echo $username; ?>!</h2>
+    <div class="row d-flex justify-content-center">
+        <div class=" col-10 col-lg-12">
+            <div class="container text-center">
+                <h2 class="mb-3">Welcome, <?php echo $username; ?>!</h2>
 
-    <!-- Display session messages -->
-    <?php if (isset($_SESSION['message'])): ?>
-        <div class="alert alert-warning"><?php echo $_SESSION['message']; ?></div>
-        <?php unset($_SESSION['message']); ?>
-    <?php endif; ?>
+                <!-- Display session messages -->
+                <?php if (isset($_SESSION['message'])): ?>
+                    <div class="alert alert-warning"><?php echo $_SESSION['message']; ?></div>
+                    <?php unset($_SESSION['message']); ?>
+                <?php endif; ?>
 
-    <!-- Logout button -->
-    <a href="?logout" class="logout-btn d-block">Logout</a>
-</div>
+                <!-- Logout button -->
+                <a href="?logout" class="logout-btn d-block">Logout</a>
+            </div>
+        </div>
+    </div>
 
-<!-- Bootstrap JS (Optional for interactivity) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS (Optional for interactivity) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>
