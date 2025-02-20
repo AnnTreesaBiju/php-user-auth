@@ -9,7 +9,7 @@ session_start();
 // Database connection
 $host = 'localhost';
 $user = 'root';
-$pass = ''; 
+$pass = '';
 $dbname = 'user_auth';
 $conn = new mysqli($host, $user, $pass, $dbname);
 if ($conn->connect_error)
@@ -17,7 +17,7 @@ if ($conn->connect_error)
 
 $message = "";
 
-// ✅ Fix: Check if 'message' exists before displaying
+//  Check if 'message' exists before displaying
 if (isset($_SESSION['message'])) {
     $message_type = isset($_SESSION['message_type']) ? $_SESSION['message_type'] : "danger"; // Default to danger
     $message = "<div class='alert alert-$message_type'>" . $_SESSION['message'] . "</div>";
@@ -25,7 +25,7 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message_type']);
 }
 
-// ✅ Fix: Store session timeout message before redirecting
+//  Store session timeout message before redirecting
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 900)) { // 900 seconds = 15 minutes
     session_unset();
     session_destroy();
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         if (password_verify($password, $row['password_hash'])) {
             // Session Fixation Protection
             session_regenerate_id(true);
-            
+
             // Store session variables
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['username'] = $username;
@@ -78,24 +78,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="row">
-        <div class="col-12">
-            <div style="border-radius: 20px;" class="container bg-white p-3 p-lg-5 shadow-lg text-center">
-                <h2 class="mb-3">Login</h2>
-                <?php if (!empty($message)) echo $message; ?>
-                <form method="post" action="">
-                    <div class="mb-3">
-                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+
+<body style="background-color: whitesmoke;
+ 
+ min-height: 100vh;
+ display: flex;
+ justify-content: center;
+ align-items: center;">
+    <div class="container">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-xl-4 col-md-6">
+
+                <?php if (!empty($message))
+                    echo $message; ?>
+                <form method="post" action="" class="form">
+                    <div class="flex-column text-center mb-3">
+                        <label class="fs-3">Login Here </label>
                     </div>
-                    <div class="mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <div class="flex-column">
+                        <label>User Name </label>
                     </div>
-                    <button class="btn btn-primary w-100" type="submit" name="login">Login</button>
+                    <div class=" inputForm">
+                        <input type="text" name="username" class=" input" placeholder="Username" required>
+                    </div>
+                    <div class="flex-column">
+                        <label>Password </label>
+                    </div>
+                    <div class=" inputForm">
+
+                        <input type="password" name="password" class=" input" placeholder="Password" required>
+                    </div>
+                    <button class="button-submit" type="submit" name="login">Sign In</button>
+                    <p class="p">Don't have an account? <span class="span"><a href="index.php">Sign Up</a></span>
+
                 </form>
-                <p class="mt-3">Don't have an account? <a href="index.php">Register Here</a></p>
             </div>
         </div>
     </div>

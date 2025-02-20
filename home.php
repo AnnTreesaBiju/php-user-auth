@@ -6,7 +6,7 @@ ini_set('session.use_strict_mode', 1); // Prevent session fixation
 
 session_start(); // Start the session 
 
-$timeout_duration = 900; // 15 minutes
+$timeout_duration = 10; // 15 minutes (900 seconds)
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -20,14 +20,13 @@ if (
     $_SESSION['user_agent'] !== $_SERVER['HTTP_USER_AGENT'] ||
     $_SESSION['ip_address'] !== $_SERVER['REMOTE_ADDR']
 ) {
-
     session_unset();
     session_destroy();
     header("Location: login.php?message=Session Hijacked");
     exit();
 }
 
-// Session expiration check (15 min inactivity)
+// **Check session expiration**
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $timeout_duration)) {
     session_unset();
     session_destroy();
@@ -37,10 +36,10 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 
     exit();
 }
 
-// Update last activity timestamp
+// **Update last activity timestamp**
 $_SESSION['last_activity'] = time();
 
-// Regenerate session ID every request to prevent fixation attacks
+// **Regenerate session ID every request to prevent fixation attacks**
 session_regenerate_id(true);
 
 // Handle logout
@@ -53,6 +52,9 @@ if (isset($_GET['logout'])) {
 
 // Get username from session
 $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : "User";
+
+// **Calculate remaining session time for JavaScript**
+$remaining_time = $_SESSION['last_activity'] + $timeout_duration - time();
 ?>
 
 <!DOCTYPE html>
@@ -96,12 +98,37 @@ $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'
             background: darkred;
         }
     </style>
+
+    <script>
+        // **JavaScript auto-logout timer**
+        var remainingTime = <?php echo $remaining_time; ?>; // Get time left in PHP
+
+        function startLogoutTimer() {
+            if (remainingTime > 0) {
+                setTimeout(function () {
+                    alert("Your session has expired. You will be redirected to the login page.");
+                    window.location.href = "login.php?message=Session Expired";
+                }, remainingTime * 1000);
+            }
+        }
+
+        // **Reset timer on user activity**
+        function resetTimer() {
+            fetch("session_refresh.php"); // Update session activity timestamp via AJAX
+        }
+
+        document.addEventListener("mousemove", resetTimer);
+        document.addEventListener("keypress", resetTimer);
+
+        // Start the logout timer when page loads
+        window.onload = startLogoutTimer;
+    </script>
 </head>
 
 <body>
 
     <div class="row d-flex justify-content-center">
-        <div class=" col-10 col-lg-12">
+        <div class="col-10 col-lg-12">
             <div class="container text-center">
                 <h2 class="mb-3">Welcome, <?php echo $username; ?>!</h2>
 
